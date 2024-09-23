@@ -1,0 +1,13 @@
+name: "StormRegen"
+version: "${project.parent.version}"
+main: "net.onestorm.plugins.stormregen.paper.StormRegen"
+api-version: "1.19"
+authors:
+  - OneStorm.net
+  - Sheepert_
+dependencies:
+  server:
+    WorldGuard:
+      load: BEFORE
+      required: true
+      join-classpath: true

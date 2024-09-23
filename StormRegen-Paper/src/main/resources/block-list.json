@@ -1,0 +1,398 @@
+{
+  "block-list": {
+
+    "example": {
+      "trigger-material": "LAPIS_ORE",
+      "replacement-block-data": "minecraft:stone",
+      "regeneration-delay": 25,
+      "prevent-experience-drops": true,
+      "prevent-item-drops": true,
+      "actions": {
+        "example-item-stack": {
+          "name": "item-stack",
+          "minimum-amount": 3,
+          "maximum-amount": 5,
+          "probability": 1.0,
+          "drop-item-stack": true,
+          "item-stack": {
+            "material": "LAPIS_LAZULI"
+          }
+        },
+        "example2-item-stack": {
+          "name": "item-stack",
+          "amount": 1,
+          "probability": 0.1,
+          "drop-item-stack": true,
+          "item-stack": {
+            "material": "BLUE_DYE",
+            "display-name": "<!i><blue>Lapis Fragment</blue>"
+          },
+          "message": "<gold><bold>RARE DROP!</bold></gold> You found a <blue>Lapis Fragment</blue>"
+        },
+        "example-command": {
+          "name": "command",
+          "minimum-amount": 10,
+          "maximum-amount": 30,
+          "probability": 0.1,
+          "command": "minecraft:effect give <player> minecraft:haste <amount> 3 false",
+          "message": "<gold><bold>RARE EFFECT!</bold></gold> You were given <gold>Haste III</gold> Effect"
+        },
+        "example-experience": {
+          "name": "experience",
+          "minimum-amount": 5,
+          "maximum-amount": 7,
+          "probability": 1.0,
+          "drop-experience": true
+        }
+      }
+
+    },
+
+    "hay-block": {
+      "trigger-material": "HAY_BLOCK",
+      "replacement-block-data": "minecraft:air",
+      "regeneration-delay": 20,
+      "prevent-experience-drops": true,
+      "prevent-item-drops": true,
+      "actions": {
+        "give-item": {
+          "name": "item-stack",
+          "amount": 1,
+          "probability": 1.0,
+          "drop-item-stack": false,
+          "item-stack": {
+            "material": "HAY_BLOCK"
+          }
+        }
+      }
+    },
+
+    "pumpkin": {
+      "trigger-material": "PUMPKIN",
+      "replacement-block-data": "minecraft:air",
+      "regeneration-delay": 20,
+      "prevent-experience-drops": true,
+      "prevent-item-drops": true,
+      "actions": {
+        "give-item": {
+          "name": "item-stack",
+          "amount": 1,
+          "probability": 1.0,
+          "drop-item-stack": false,
+          "item-stack": {
+            "material": "PUMPKIN"
+          }
+        }
+      }
+    },
+
+    "oak-wood": {
+      "trigger-material": "OAK_WOOD",
+      "replacement-block-data": "minecraft:air",
+      "regeneration-delay": 25,
+      "prevent-experience-drops": true,
+      "prevent-item-drops": true,
+      "actions": {
+        "give-item": {
+          "name": "item-stack",
+          "amount": 1,
+          "probability": 1.0,
+          "drop-item-stack": false,
+          "item-stack": {
+            "material": "OAK_WOOD"
+          }
+        }
+      }
+    },
+
+    "oak-log": {
+      "trigger-material": "OAK_LOG",
+      "replacement-block-data": "minecraft:air",
+      "regeneration-delay": 25,
+      "prevent-experience-drops": true,
+      "prevent-item-drops": true,
+      "actions": {
+        "give-item": {
+          "name": "item-stack",
+          "amount": 1,
+          "probability": 1.0,
+          "drop-item-stack": false,
+          "item-stack": {
+            "material": "OAK_LOG"
+          }
+        }
+      }
+    },
+
+    "oak-leaves": {
+      "trigger-material": "OAK_LEAVES",
+      "replacement-block-data": "minecraft:air",
+      "regeneration-delay": 25,
+      "prevent-experience-drops": true,
+      "prevent-item-drops": true,
+      "actions": {
+        "give-item": {
+          "name": "item-stack",
+          "amount": 1,
+          "probability": 0.005,
+          "drop-item-stack": false,
+          "item-stack": {
+            "material": "APPLE"
+          }
+        }
+      }
+    },
+
+
+
+    "spruce-wood": {
+      "trigger-material": "SPRUCE_WOOD",
+      "replacement-block-data": "minecraft:air",
+      "regeneration-delay": 25,
+      "prevent-experience-drops": true,
+      "prevent-item-drops": true,
+      "actions": {
+        "give-item": {
+          "name": "item-stack",
+          "amount": 1,
+          "probability": 1.0,
+          "drop-item-stack": false,
+          "item-stack": {
+            "material": "SPRUCE_WOOD"
+          }
+        }
+      }
+    },
+
+    "spruce-log": {
+      "trigger-material": "SPRUCE_LOG",
+      "replacement-block-data": "minecraft:air",
+      "regeneration-delay": 25,
+      "prevent-experience-drops": true,
+      "prevent-item-drops": true,
+      "actions": {
+        "give-item": {
+          "name": "item-stack",
+          "amount": 1,
+          "probability": 1.0,
+          "drop-item-stack": false,
+          "item-stack": {
+            "material": "SPRUCE_LOG"
+          }
+        }
+      }
+    },
+
+    "spruce-leaves": {
+      "trigger-material": "SPRUCE_LEAVES",
+      "replacement-block-data": "minecraft:air",
+      "regeneration-delay": 25,
+      "prevent-experience-drops": true,
+      "prevent-item-drops": true
+    },
+
+
+
+    "birch-wood": {
+      "trigger-material": "BIRCH_WOOD",
+      "replacement-block-data": "minecraft:air",
+      "regeneration-delay": 25,
+      "prevent-experience-drops": true,
+      "prevent-item-drops": true,
+      "actions": {
+        "give-item": {
+          "name": "item-stack",
+          "amount": 1,
+          "probability": 1.0,
+          "drop-item-stack": false,
+          "item-stack": {
+            "material": "BIRCH_WOOD"
+          }
+        }
+      }
+    },
+
+    "birch-log": {
+      "trigger-material": "BIRCH_LOG",
+      "replacement-block-data": "minecraft:air",
+      "regeneration-delay": 25,
+      "prevent-experience-drops": true,
+      "prevent-item-drops": true,
+      "actions": {
+        "give-item": {
+          "name": "item-stack",
+          "amount": 1,
+          "probability": 1.0,
+          "drop-item-stack": false,
+          "item-stack": {
+            "material": "BIRCH_LOG"
+          }
+        }
+      }
+    },
+
+    "birch-leaves": {
+      "trigger-material": "BIRCH_LEAVES",
+      "replacement-block-data": "minecraft:air",
+      "regeneration-delay": 25,
+      "prevent-experience-drops": true,
+      "prevent-item-drops": true
+    },
+
+
+
+    "jungle-wood": {
+      "trigger-material": "JUNGLE_WOOD",
+      "replacement-block-data": "minecraft:air",
+      "regeneration-delay": 25,
+      "prevent-experience-drops": true,
+      "prevent-item-drops": true,
+      "actions": {
+        "give-item": {
+          "name": "item-stack",
+          "amount": 1,
+          "probability": 1.0,
+          "drop-item-stack": false,
+          "item-stack": {
+            "material": "JUNGLE_WOOD"
+          }
+        }
+      }
+    },
+
+    "jungle-log": {
+      "trigger-material": "JUNGLE_LOG",
+      "replacement-block-data": "minecraft:air",
+      "regeneration-delay": 25,
+      "prevent-experience-drops": true,
+      "prevent-item-drops": true,
+      "actions": {
+        "give-item": {
+          "name": "item-stack",
+          "amount": 1,
+          "probability": 1.0,
+          "drop-item-stack": false,
+          "item-stack": {
+            "material": "JUNGLE_LOG"
+          }
+        }
+      }
+    },
+
+    "jungle-leaves": {
+      "trigger-material": "JUNGLE_LEAVES",
+      "replacement-block-data": "minecraft:air",
+      "regeneration-delay": 25,
+      "prevent-experience-drops": true,
+      "prevent-item-drops": true
+    },
+
+
+
+    "acacia-wood": {
+      "trigger-material": "ACACIA_WOOD",
+      "replacement-block-data": "minecraft:air",
+      "regeneration-delay": 25,
+      "prevent-experience-drops": true,
+      "prevent-item-drops": true,
+      "actions": {
+        "give-item": {
+          "name": "item-stack",
+          "amount": 1,
+          "probability": 1.0,
+          "drop-item-stack": false,
+          "item-stack": {
+            "material": "ACACIA_WOOD"
+          }
+        }
+      }
+    },
+
+    "acacia-log": {
+      "trigger-material": "ACACIA_LOG",
+      "replacement-block-data": "minecraft:air",
+      "regeneration-delay": 25,
+      "prevent-experience-drops": true,
+      "prevent-item-drops": true,
+      "actions": {
+        "give-item": {
+          "name": "item-stack",
+          "amount": 1,
+          "probability": 1.0,
+          "drop-item-stack": false,
+          "item-stack": {
+            "material": "ACACIA_LOG"
+          }
+        }
+      }
+    },
+
+    "acacia-leaves": {
+      "trigger-material": "ACACIA_LEAVES",
+      "replacement-block-data": "minecraft:air",
+      "regeneration-delay": 25,
+      "prevent-experience-drops": true,
+      "prevent-item-drops": true
+    },
+
+
+
+    "dark-oak-wood": {
+      "trigger-material": "DARK_OAK_WOOD",
+      "replacement-block-data": "minecraft:air",
+      "regeneration-delay": 25,
+      "prevent-experience-drops": true,
+      "prevent-item-drops": true,
+      "actions": {
+        "give-item": {
+          "name": "item-stack",
+          "amount": 1,
+          "probability": 1.0,
+          "drop-item-stack": false,
+          "item-stack": {
+            "material": "DARK_OAK_WOOD"
+          }
+        }
+      }
+    },
+
+    "dark-oak-log": {
+      "trigger-material": "DARK_OAK_LOG",
+      "replacement-block-data": "minecraft:air",
+      "regeneration-delay": 25,
+      "prevent-experience-drops": true,
+      "prevent-item-drops": true,
+      "actions": {
+        "give-item": {
+          "name": "item-stack",
+          "amount": 1,
+          "probability": 1.0,
+          "drop-item-stack": false,
+          "item-stack": {
+            "material": "DARK_OAK_LOG"
+          }
+        }
+      }
+    },
+
+    "dark-oak-leaves": {
+      "trigger-material": "DARK_OAK_LEAVES",
+      "replacement-block-data": "minecraft:air",
+      "regeneration-delay": 25,
+      "prevent-experience-drops": true,
+      "prevent-item-drops": true,
+      "actions": {
+        "give-item": {
+          "name": "item-stack",
+          "amount": 1,
+          "probability": 0.005,
+          "drop-item-stack": false,
+          "item-stack": {
+            "material": "APPLE"
+          }
+        }
+      }
+    }
+
+  }
+}
