@@ -1,14 +1,10 @@
 package net.onestorm.plugins.stormregen.paper.action;
 
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.onestorm.plugins.stormregen.paper.StormRegen;
 import org.bukkit.block.BlockState;
-import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerExpChangeEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.Map;
 import java.util.Random;
 
 public class ItemStackAction implements Action {
@@ -16,18 +12,16 @@ public class ItemStackAction implements Action {
     private static final Random RANDOM = new Random();
     private static final MiniMessage MINI_MESSAGE = MiniMessage.miniMessage();
 
-    private final StormRegen plugin;
     private final double probability;
     private final boolean shouldSendMessage;
     private final String message;
     private final int minimumAmount;
     private final int maximumAmount;
     private final boolean dropItemStack;
-    private ItemStack itemStack;
+    private final ItemStack itemStack;
 
-    public ItemStackAction(StormRegen plugin, double probability, boolean shouldSendMessage, String message,
+    public ItemStackAction(double probability, boolean shouldSendMessage, String message,
                            int minimumAmount, int maximumAmount, boolean dropItemStack, ItemStack itemStack) {
-        this.plugin = plugin;
         this.probability = probability;
         this.shouldSendMessage = shouldSendMessage;
         this.message = message;

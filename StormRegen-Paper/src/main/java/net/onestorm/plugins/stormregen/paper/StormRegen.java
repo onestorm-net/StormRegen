@@ -103,9 +103,8 @@ public class StormRegen extends JavaPlugin {
     }
 
     private RegenerationData loadRegenerationData(StorageMap storage) {
-        String triggerMaterialString = storage.getString("trigger-material").orElseThrow(() -> {
-            return new IllegalArgumentException("Missing key: \"trigger-material\"");
-        });
+        String triggerMaterialString = storage.getString("trigger-material")
+            .orElseThrow(() -> new IllegalArgumentException("Missing key: \"trigger-material\""));
         Material triggerMaterial = Material.valueOf(triggerMaterialString.toUpperCase(Locale.ENGLISH));
         String replacementBlockString = storage.getString("replacement-block-data").orElse(DEFAULT_REPLACEMENT_BLOCK_DATA);
         BlockData replacementBlockData = Bukkit.createBlockData(replacementBlockString);
@@ -149,7 +148,7 @@ public class StormRegen extends JavaPlugin {
     private void loadFactory() {
         actionFactory.registerBuilder(new CommandActionBuilder(this));
         actionFactory.registerBuilder(new ExperienceActionBuilder(this));
-        actionFactory.registerBuilder(new ItemStackActionBuilder(this));
+        actionFactory.registerBuilder(new ItemStackActionBuilder());
     }
     public void reload() {
         loadRegenerationDataMap();
