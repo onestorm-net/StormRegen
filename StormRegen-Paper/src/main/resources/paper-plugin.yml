@@ -1,7 +1,7 @@
 name: "StormRegen"
 version: "${project.parent.version}"
 main: "net.onestorm.plugins.stormregen.paper.StormRegen"
-api-version: "1.19"
+api-version: "1.21"
 authors:
   - OneStorm.net
   - Sheepert_

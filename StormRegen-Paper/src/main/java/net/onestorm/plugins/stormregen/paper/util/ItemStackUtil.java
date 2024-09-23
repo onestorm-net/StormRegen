@@ -39,14 +39,13 @@ public class ItemStackUtil {
             List<Component> lore = new ArrayList<>();
             storageList.forEach(value -> {
                 Component line;
-                if (value instanceof String string) {
-                    line = MINI_MESSAGE.deserialize(string);
-                } else if (value instanceof Number number) {
-                    line = Component.text(String.valueOf(number));
-                } else if (value instanceof Boolean bool) {
-                    line = Component.text(bool);
-                } else {
-                    return; // continue
+                switch (value) {
+                    case String string -> line = MINI_MESSAGE.deserialize(string);
+                    case Number number -> line = Component.text(String.valueOf(number));
+                    case Boolean bool -> line = Component.text(bool);
+                    case null, default -> {
+                        return; // continue
+                    }
                 }
                 lore.add(line);
             });

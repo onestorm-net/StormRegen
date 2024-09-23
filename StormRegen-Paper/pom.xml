@@ -12,8 +12,8 @@
     <artifactId>stormregen-paper</artifactId>
 
     <properties>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -36,24 +36,24 @@
         <dependency>
             <groupId>io.papermc.paper</groupId>
             <artifactId>paper-api</artifactId>
-            <version>1.19.4-R0.1-SNAPSHOT</version>
+            <version>1.21.1-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>net.onestorm.library</groupId>
             <artifactId>stormlibrary-storage</artifactId>
-            <version>1.8.3-JAVA17-SNAPSHOT</version>
+            <version>1.8.3-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>net.onestorm.library</groupId>
             <artifactId>stormlibrary-common</artifactId>
-            <version>1.8.3-JAVA17-SNAPSHOT</version>
+            <version>1.8.3-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.sk89q.worldguard</groupId>
             <artifactId>worldguard-bukkit</artifactId>
+            <version>7.0.12</version>
             <scope>provided</scope>
-            <version>7.0.8</version>
         </dependency>
     </dependencies>
 
