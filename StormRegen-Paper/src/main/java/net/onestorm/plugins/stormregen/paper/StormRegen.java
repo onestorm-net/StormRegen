@@ -1,6 +1,7 @@
 package net.onestorm.plugins.stormregen.paper;
 
 import com.sk89q.worldguard.WorldGuard;
+import com.sk89q.worldguard.protection.flags.SetFlag;
 import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.flags.registry.FlagConflictException;
 import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
@@ -18,6 +19,8 @@ import net.onestorm.plugins.stormregen.paper.action.builder.ItemStackActionBuild
 import net.onestorm.plugins.stormregen.paper.command.ReloadCommand;
 import net.onestorm.plugins.stormregen.paper.listener.BlockBreakListener;
 import net.onestorm.plugins.stormregen.paper.regeneration.RegenerationData;
+import net.onestorm.plugins.stormregen.paper.worldguard.WorldGuardListener;
+import net.onestorm.plugins.stormregen.paper.worldguard.flag.BlockMaterialFlag;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.data.BlockData;
@@ -42,6 +45,7 @@ public class StormRegen extends JavaPlugin {
     private final FileStorage storage = new JsonStorage();
     private final Factory<Action> actionFactory = new GenericFactory<>();
     private StateFlag blockRegenerationFlag;
+    private SetFlag<Material> allowBlockBreakFlag;
     private BlockBreakListener listener;
     private Map<Material, RegenerationData> regenerationDataMap = new ConcurrentHashMap<>();
 
@@ -49,11 +53,13 @@ public class StormRegen extends JavaPlugin {
     public void onLoad() {
         FlagRegistry registry = WorldGuard.getInstance().getFlagRegistry();
         try {
-            StateFlag flag = new StateFlag("block-regeneration", false);
-            registry.register(flag);
-            blockRegenerationFlag = flag;
+            blockRegenerationFlag = new StateFlag("block-regeneration", false);
+            registry.register(blockRegenerationFlag);
+            allowBlockBreakFlag = new SetFlag<>("allow-block-break", new BlockMaterialFlag(null));
+            registry.register(allowBlockBreakFlag);
+
         } catch (FlagConflictException e) {
-            getLogger().log(Level.WARNING, "Conflict flag: block-regeneration", e);
+            getLogger().log(Level.WARNING, "Conflicting flag", e);
         }
     }
 
@@ -63,6 +69,9 @@ public class StormRegen extends JavaPlugin {
         loadFactory();
         loadRegenerationDataMap();
         loadCommands();
+
+        // for allow-block-break
+        new WorldGuardListener(this);
     }
 
     @Override
@@ -160,5 +169,8 @@ public class StormRegen extends JavaPlugin {
 
     public StateFlag getBlockRegenerationFlag() {
         return blockRegenerationFlag;
+    }
+    public SetFlag<Material> getAllowBlockBreakFlag() {
+        return allowBlockBreakFlag;
     }
 }
