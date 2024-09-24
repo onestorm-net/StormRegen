@@ -36,4 +36,4 @@ jobs:
       - name: Rsync deploy maven repo
         run: rsync -r --quiet target/local-repository/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/home/web/www/repo.onestorm.net/public/repository/maven-public/
       - name: Rsync deploy final artifact
-        run: rsync -r --quiet --mkpath target/StormRegen-*.jar ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/home/web/www/repo.onestorm.net/public/downloads/StormRegen/
+        run: rsync -r --quiet --mkpath StormRegen-Paper/target/StormRegen-*.jar ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/home/web/www/repo.onestorm.net/public/downloads/StormRegen/
