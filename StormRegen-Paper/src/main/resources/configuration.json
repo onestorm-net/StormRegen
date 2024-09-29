@@ -1,0 +1,6 @@
+{
+  "event-priority": {
+    "world-guard-break-block": "LOW",
+    "bukkit-block-break": "LOW"
+  }
+}

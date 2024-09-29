@@ -13,24 +13,24 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
-import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventException;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.plugin.EventExecutor;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
 
 
-public class WorldGuardListener implements Listener {
+public class WorldGuardHandler implements EventExecutor, Listener {
 
     private final StormRegen plugin;
 
-    public WorldGuardListener(StormRegen plugin) {
+    public WorldGuardHandler(StormRegen plugin) {
         this.plugin = plugin;
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
-    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onBlockBreak(BreakBlockEvent event) {
+    public void handle(BreakBlockEvent event) {
         Event.Result originalResult = event.getResult();
         Object cause = event.getCause().getRootCause();
 
@@ -50,5 +50,14 @@ public class WorldGuardListener implements Listener {
                 }
             }
         }
+    }
+
+    public void register(EventPriority priority) {
+        plugin.getServer().getPluginManager().registerEvent(BreakBlockEvent.class, this, priority, this, plugin, true);
+    }
+
+    @Override
+    public void execute(@NotNull Listener listener, @NotNull Event event) throws EventException {
+        handle((BreakBlockEvent) event);
     }
 }

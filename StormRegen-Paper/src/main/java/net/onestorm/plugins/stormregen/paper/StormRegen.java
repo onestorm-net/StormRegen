@@ -1,6 +1,7 @@
 package net.onestorm.plugins.stormregen.paper;
 
 import com.sk89q.worldguard.WorldGuard;
+import com.sk89q.worldguard.bukkit.event.block.BreakBlockEvent;
 import com.sk89q.worldguard.protection.flags.SetFlag;
 import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.flags.registry.FlagConflictException;
@@ -17,13 +18,15 @@ import net.onestorm.plugins.stormregen.paper.action.builder.CommandActionBuilder
 import net.onestorm.plugins.stormregen.paper.action.builder.ExperienceActionBuilder;
 import net.onestorm.plugins.stormregen.paper.action.builder.ItemStackActionBuilder;
 import net.onestorm.plugins.stormregen.paper.command.ReloadCommand;
-import net.onestorm.plugins.stormregen.paper.listener.BlockBreakListener;
+import net.onestorm.plugins.stormregen.paper.listener.BlockBreakHandler;
 import net.onestorm.plugins.stormregen.paper.regeneration.RegenerationData;
-import net.onestorm.plugins.stormregen.paper.worldguard.WorldGuardListener;
+import net.onestorm.plugins.stormregen.paper.worldguard.WorldGuardHandler;
 import net.onestorm.plugins.stormregen.paper.worldguard.flag.BlockMaterialFlag;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.data.BlockData;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -36,17 +39,30 @@ import java.util.logging.Level;
 
 public class StormRegen extends JavaPlugin {
 
+    // regeneration data
     public static final int DEFAULT_REGENERATION_DELAY = 10; // seconds;
     public static final String DEFAULT_REPLACEMENT_BLOCK_DATA = "minecraft:air";
     public static final boolean DEFAULT_PREVENT_ITEM_DROPS = false;
     public static final boolean DEFAULT_PREVENT_EXPERIENCE_DROPS = false;
     private static final String REGENERATION_DATA_FILE_NAME = "block-list.json";
 
-    private final FileStorage storage = new JsonStorage();
+    // configuration
+    public static final String WORLD_GUARD_PRIORITY_PATH = "event-priority.world-guard-break-block";
+    public static final String BUKKIT_PRIORITY_PATH = "event-priority.bukkit-block-break";
+    public static final String DEFAULT_EVENT_PRIORITY_STRING = "LOWEST";
+    public static final EventPriority DEFAULT_EVENT_PRIORITY = EventPriority.LOWEST;
+    private static final String CONFIGURATION_FILE_NAME = "configuration.json";
+
+    private final FileStorage regenerationDataStorage = new JsonStorage();
+    private final FileStorage configurationStorage = new JsonStorage();
     private final Factory<Action> actionFactory = new GenericFactory<>();
+
+    private EventPriority blockBreakEventPriority;
+    private EventPriority worldGuardEventPriority;
     private StateFlag blockRegenerationFlag;
     private SetFlag<Material> allowBlockBreakFlag;
-    private BlockBreakListener listener;
+    private BlockBreakHandler blockBreakHandler;
+    private WorldGuardHandler worldGuardHandler;
     private Map<Material, RegenerationData> regenerationDataMap = new ConcurrentHashMap<>();
 
     @Override
@@ -65,18 +81,57 @@ public class StormRegen extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        listener = new BlockBreakListener(this);
+        // action factory
         loadFactory();
+        // load configs
+        loadConfiguration();
+        // load regeneration data from storage
         loadRegenerationDataMap();
+        // load events
+        loadEvents();
+        // load commands
         loadCommands();
-
-        // for allow-block-break
-        new WorldGuardListener(this);
     }
 
     @Override
     public void onDisable() {
-        listener.close();
+        blockBreakHandler.close();
+    }
+
+    private void loadFactory() {
+        actionFactory.registerBuilder(new CommandActionBuilder(this));
+        actionFactory.registerBuilder(new ExperienceActionBuilder(this));
+        actionFactory.registerBuilder(new ItemStackActionBuilder());
+    }
+
+    private void loadConfiguration() {
+        File file = new File(getDataFolder(), CONFIGURATION_FILE_NAME);
+        if (!file.exists()) {
+            saveResource(CONFIGURATION_FILE_NAME, false);
+        }
+        try {
+            configurationStorage.load(file);
+        } catch (IOException e) {
+            getLogger().log(Level.WARNING, "Could not load " + CONFIGURATION_FILE_NAME + " file", e);
+            return;
+        }
+
+        String worldGuardPriorityString = configurationStorage.getString(WORLD_GUARD_PRIORITY_PATH).orElse(DEFAULT_EVENT_PRIORITY_STRING);
+        String bukkitPriorityString = configurationStorage.getString(BUKKIT_PRIORITY_PATH).orElse(DEFAULT_EVENT_PRIORITY_STRING);
+        try {
+            worldGuardEventPriority = EventPriority.valueOf(worldGuardPriorityString);
+        } catch (IllegalArgumentException e) {
+            getLogger().log(Level.WARNING, "Invalid priority given for \"" + WORLD_GUARD_PRIORITY_PATH + "\". defaulting to " + DEFAULT_EVENT_PRIORITY.name(), e);
+            worldGuardEventPriority = DEFAULT_EVENT_PRIORITY;
+        }
+
+        try {
+            blockBreakEventPriority = EventPriority.valueOf(bukkitPriorityString);
+        } catch (IllegalArgumentException e) {
+            getLogger().log(Level.WARNING, "Invalid priority given for \"" + BUKKIT_PRIORITY_PATH + "\". defaulting to " + DEFAULT_EVENT_PRIORITY.name(), e);
+            blockBreakEventPriority = DEFAULT_EVENT_PRIORITY;
+        }
+
     }
 
     private void loadRegenerationDataMap() {
@@ -85,14 +140,14 @@ public class StormRegen extends JavaPlugin {
             saveResource(REGENERATION_DATA_FILE_NAME, false);
         }
         try {
-            storage.load(file);
+            regenerationDataStorage.load(file);
         } catch (IOException e) {
-            getLogger().log(Level.WARNING, "Could not load configuration file", e);
+            getLogger().log(Level.WARNING, "Could not load " + REGENERATION_DATA_FILE_NAME + " file", e);
             return;
         }
 
         Map<Material, RegenerationData> newRegenerationDataMap = new ConcurrentHashMap<>();
-        Optional<StorageMap> optionalRegenerationDataMap = storage.getMap("block-list");
+        Optional<StorageMap> optionalRegenerationDataMap = regenerationDataStorage.getMap("block-list");
         if (optionalRegenerationDataMap.isPresent()) {
             StorageMap regenerationDataMap = optionalRegenerationDataMap.get();
             regenerationDataMap.forEach((key, value) -> {
@@ -150,17 +205,28 @@ public class StormRegen extends JavaPlugin {
         return data;
     }
 
+    private void loadEvents() {
+        if (blockBreakHandler != null) {
+            blockBreakHandler.close(); // unregisters and regenerates all blocks
+        }
+        if (worldGuardHandler != null) {
+            HandlerList.unregisterAll(worldGuardHandler);
+        }
+
+        blockBreakHandler = new BlockBreakHandler(this);
+        worldGuardHandler = new WorldGuardHandler(this);
+
+        blockBreakHandler.register(blockBreakEventPriority);
+        worldGuardHandler.register(worldGuardEventPriority);
+    }
+
     private void loadCommands() {
         getServer().getCommandMap().register(getName(), new ReloadCommand(this));
     }
-
-    private void loadFactory() {
-        actionFactory.registerBuilder(new CommandActionBuilder(this));
-        actionFactory.registerBuilder(new ExperienceActionBuilder(this));
-        actionFactory.registerBuilder(new ItemStackActionBuilder());
-    }
     public void reload() {
         loadRegenerationDataMap();
+        loadConfiguration();
+        loadEvents();
     }
 
     public Map<Material, RegenerationData> getRegenerationDataMap() {

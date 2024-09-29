@@ -7,6 +7,7 @@ import com.sk89q.worldguard.LocalPlayer;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.bukkit.ProtectionQuery;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
+import com.sk89q.worldguard.bukkit.event.block.BreakBlockEvent;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import com.sk89q.worldguard.protection.regions.RegionQuery;
 import net.onestorm.plugins.stormregen.paper.StormRegen;
@@ -16,18 +17,21 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
+import org.bukkit.event.Event;
+import org.bukkit.event.EventException;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.plugin.EventExecutor;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scheduler.BukkitTask;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class BlockBreakListener implements Listener {
+public class BlockBreakHandler implements EventExecutor, Listener {
 
     private static final long TICKS_IN_SECOND = 20L;
     private static final ProtectionQuery PROTECTION_QUERY = new ProtectionQuery();
@@ -35,14 +39,11 @@ public class BlockBreakListener implements Listener {
     private final Map<Block, Regeneration> regenerationMap = new ConcurrentHashMap<>();
     private final StormRegen plugin;
 
-    public BlockBreakListener(StormRegen plugin) {
+    public BlockBreakHandler(StormRegen plugin) {
         this.plugin = plugin;
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
-    @SuppressWarnings("unused")
-    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onBlockBreak(BlockBreakEvent event) {
+    public void handle(BlockBreakEvent event) {
         final Player player = event.getPlayer();
         final Block block = event.getBlock();
 
@@ -111,6 +112,15 @@ public class BlockBreakListener implements Listener {
             regeneration.task().cancel();
             block.setBlockData(regeneration.originalBlockState().getBlockData());
         });
+    }
+
+    public void register(EventPriority priority) {
+        plugin.getServer().getPluginManager().registerEvent(BlockBreakEvent.class, this, priority, this, plugin, true);
+    }
+
+    @Override
+    public void execute(@NotNull Listener listener, @NotNull Event event) throws EventException {
+        handle((BlockBreakEvent) event);
     }
 
     private record Regeneration(BukkitTask task, BlockState originalBlockState) { }
