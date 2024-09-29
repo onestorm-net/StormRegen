@@ -5,6 +5,7 @@ import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.util.Location;
 import com.sk89q.worldguard.LocalPlayer;
 import com.sk89q.worldguard.WorldGuard;
+import com.sk89q.worldguard.bukkit.ProtectionQuery;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import com.sk89q.worldguard.protection.regions.RegionQuery;
@@ -29,6 +30,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class BlockBreakListener implements Listener {
 
     private static final long TICKS_IN_SECOND = 20L;
+    private static final ProtectionQuery PROTECTION_QUERY = new ProtectionQuery();
 
     private final Map<Block, Regeneration> regenerationMap = new ConcurrentHashMap<>();
     private final StormRegen plugin;
@@ -48,12 +50,7 @@ public class BlockBreakListener implements Listener {
             return;
         }
 
-        RegenerationData regenerationData = plugin.getRegenerationDataMap().get(block.getType());
-
-        if (regenerationData == null) {
-            return;
-        }
-
+        // WorldGuard start
         RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
         RegionQuery query = container.createQuery();
         LocalPlayer localPlayer = WorldGuardPlugin.inst().wrapPlayer(player);
@@ -61,6 +58,17 @@ public class BlockBreakListener implements Listener {
 
         if (!query.testState(location, localPlayer, plugin.getBlockRegenerationFlag())) {
             return; // not a regen region
+        }
+
+        if (!PROTECTION_QUERY.testBlockBreak(player, block)) {
+            return; // calls blockbreakevent, to check if the player is allowed to break this block
+        }
+        // WorldGuard end
+
+        RegenerationData regenerationData = plugin.getRegenerationDataMap().get(block.getType());
+
+        if (regenerationData == null) {
+            return;
         }
 
         if (regenerationData.preventExperienceDrops()) {
