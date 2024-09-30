@@ -6,6 +6,9 @@ import com.sk89q.worldguard.protection.flags.SetFlag;
 import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.flags.registry.FlagConflictException;
 import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
+import io.papermc.paper.command.brigadier.Commands;
+import io.papermc.paper.plugin.lifecycle.event.LifecycleEventManager;
+import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import net.onestorm.library.common.factory.BuildException;
 import net.onestorm.library.common.factory.Factory;
 import net.onestorm.library.common.factory.GenericFactory;
@@ -27,10 +30,12 @@ import org.bukkit.Material;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
@@ -220,9 +225,15 @@ public class StormRegen extends JavaPlugin {
         worldGuardHandler.register(worldGuardEventPriority);
     }
 
+    @SuppressWarnings("UnstableApiUsage")
     private void loadCommands() {
-        getServer().getCommandMap().register(getName(), new ReloadCommand(this));
+        LifecycleEventManager<Plugin> manager = this.getLifecycleManager();
+        manager.registerEventHandler(LifecycleEvents.COMMANDS, event -> {
+            final Commands commands = event.registrar();
+            commands.register("stormregenreload", List.of("srreload"), new ReloadCommand(this));
+        });
     }
+
     public void reload() {
         loadRegenerationDataMap();
         loadConfiguration();
