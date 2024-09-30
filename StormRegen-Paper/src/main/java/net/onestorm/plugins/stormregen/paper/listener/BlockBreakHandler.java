@@ -7,7 +7,6 @@ import com.sk89q.worldguard.LocalPlayer;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.bukkit.ProtectionQuery;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
-import com.sk89q.worldguard.bukkit.event.block.BreakBlockEvent;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import com.sk89q.worldguard.protection.regions.RegionQuery;
 import net.onestorm.plugins.stormregen.paper.StormRegen;
@@ -18,7 +17,6 @@ import org.bukkit.block.BlockState;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
-import org.bukkit.event.EventException;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
@@ -119,7 +117,7 @@ public class BlockBreakHandler implements EventExecutor, Listener {
     }
 
     @Override
-    public void execute(@NotNull Listener listener, @NotNull Event event) throws EventException {
+    public void execute(@NotNull Listener listener, @NotNull Event event) {
         handle((BlockBreakEvent) event);
     }
 

@@ -1,7 +1,6 @@
 package net.onestorm.plugins.stormregen.paper;
 
 import com.sk89q.worldguard.WorldGuard;
-import com.sk89q.worldguard.bukkit.event.block.BreakBlockEvent;
 import com.sk89q.worldguard.protection.flags.SetFlag;
 import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.flags.registry.FlagConflictException;
