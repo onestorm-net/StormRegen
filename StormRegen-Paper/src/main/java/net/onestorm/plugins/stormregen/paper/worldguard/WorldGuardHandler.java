@@ -15,6 +15,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.plugin.EventExecutor;
 import org.jetbrains.annotations.NotNull;
 
@@ -57,6 +58,9 @@ public class WorldGuardHandler implements EventExecutor, Listener {
 
     @Override
     public void execute(@NotNull Listener listener, @NotNull Event event) {
-        handle((BreakBlockEvent) event);
+        if (!(event instanceof BreakBlockEvent breakBlockEvent)) {
+            return;
+        }
+        handle(breakBlockEvent);
     }
 }
