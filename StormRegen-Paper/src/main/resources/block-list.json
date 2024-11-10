@@ -37,6 +37,14 @@
           "command": "minecraft:effect give <player> minecraft:haste <amount> 3 false",
           "message": "<gold><bold>RARE EFFECT!</bold></gold> You were given <gold>Haste III</gold> Effect"
         },
+        "example-give-item": {
+          "name": "give-item",
+          "amount": 1,
+          "probability": 0.1,
+          "drop-item-stack": true,
+          "give-input": "minecraft:diamond[food={nutrition:3,saturation:1,can_always_eat:true}]",
+          "message": "<gold><bold>RARE DROP!</bold></gold> You found an edible <aqua>Diamond</aqua>"
+        },
         "example-experience": {
           "name": "experience",
           "minimum-amount": 5,

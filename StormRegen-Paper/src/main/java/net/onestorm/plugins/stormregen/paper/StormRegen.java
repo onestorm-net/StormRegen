@@ -18,6 +18,7 @@ import net.onestorm.library.storage.file.json.JsonStorage;
 import net.onestorm.plugins.stormregen.paper.action.Action;
 import net.onestorm.plugins.stormregen.paper.action.builder.CommandActionBuilder;
 import net.onestorm.plugins.stormregen.paper.action.builder.ExperienceActionBuilder;
+import net.onestorm.plugins.stormregen.paper.action.builder.GiveItemActionBuilder;
 import net.onestorm.plugins.stormregen.paper.action.builder.ItemStackActionBuilder;
 import net.onestorm.plugins.stormregen.paper.command.ReloadCommand;
 import net.onestorm.plugins.stormregen.paper.listener.BlockBreakHandler;
@@ -106,6 +107,7 @@ public class StormRegen extends JavaPlugin {
         actionFactory.registerBuilder(new CommandActionBuilder(this));
         actionFactory.registerBuilder(new ExperienceActionBuilder(this));
         actionFactory.registerBuilder(new ItemStackActionBuilder());
+        actionFactory.registerBuilder(new GiveItemActionBuilder());
     }
 
     private void loadConfiguration() {
